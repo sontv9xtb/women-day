@@ -67,12 +67,6 @@
             width: 90%;
         }
 
-        /* Expand container for gift image screen */
-        .container:has(.gift-image-screen.show) {
-            max-width: 95%;
-            width: 95%;
-        }
-
         /* Welcome Screen with Greeting */
         .welcome-screen {
             display: block;
@@ -399,6 +393,7 @@
             transition: all 0.3s ease;
             animation: fadeIn 0.8s ease 2s both;
             text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            text-decoration: none;
         }
 
         .continue-btn:hover {
@@ -411,69 +406,11 @@
             transform: translateY(-2px);
         }
 
-        /* Gift Image Screen */
-        .gift-image-screen {
-            display: none;
-            animation: fadeInUp 1s ease;
-            padding: 20px 0;
-        }
-
-        .gift-image-screen.show {
-            display: block;
-        }
-
-        .gift-image-wrapper {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            border: 2px solid rgba(255,255,255,0.3);
-            animation: fadeInUp 1s ease;
-            margin: 0 auto;
-        }
-
-        .gift-image-title {
-            font-size: 42px;
-            color: #fff;
-            font-weight: 800;
-            text-shadow: 3px 3px 15px rgba(0,0,0,0.4);
-            margin-bottom: 30px;
-            animation: slideInLeft 0.8s ease 0.3s both;
-        }
-
-        .gift-image {
-            max-width: 90%;
-            width: auto;
-            height: auto;
-            max-height: none;
-            border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
-            animation: scaleIn 0.8s ease 0.5s both;
-            border: 3px solid rgba(255,255,255,0.5);
-            display: block;
-            margin: 0 auto;
-        }
-
         @media (max-width: 600px) {
             .continue-btn {
                 font-size: 18px;
                 padding: 12px 30px;
             }
-
-            .gift-image-wrapper {
-                padding: 25px;
-            }
-
-            .gift-image-title {
-                font-size: 32px;
-            }
-
-            .gift-image {
-                width: 100%;
-                max-width: 100%;
-            }
-        }
 
         /* Confetti */
         .confetti {
@@ -787,19 +724,9 @@
             <p>🌟 Thành công và tràn đầy năng lượng 🌟</p>
             <p>❤️ Cảm ơn anh chị em tốn công tốn sức với anh em nhiều !!!! ❤️</p>
             <div class="decorations">🌸 🌹 🌺 ❤️ 💝 🌸 🌹 🌺</div>
-            <button class="continue-btn" id="continueBtn">🎁 Nhấn vào đây mới có quà nèeeee 🎁</button>
+            <a href="https://shopeefood.shopee.vn/u/MgbJWVN" target="_blank" class="continue-btn" id="continueBtn">🎁 Hehe chẳng có quà đâu 🎁</a>
         </div>
 
-        <!-- Gift Image Screen -->
-        <div class="gift-image-screen" id="giftImageScreen">
-            <div class="gift-image-wrapper">
-                <h1 class="gift-image-title">💝 🌟buck nhá hihihihi 💝</h1>
-                <img src="../IMG_3634.PNG" 
-                     alt="Gift Image" 
-                     class="gift-image"
-                     id="giftImage">
-            </div>
-        </div>
     </div>
 
     <!-- Control buttons -->
@@ -836,7 +763,6 @@
         const envelope = document.getElementById('envelope');
         const wishes = document.getElementById('wishes');
         const continueBtn = document.getElementById('continueBtn');
-        const giftImageScreen = document.getElementById('giftImageScreen');
         const resetBtn = document.getElementById('resetBtn');
         const musicBtn = document.getElementById('musicBtn');
         const musicIcon = document.getElementById('musicIcon');
@@ -846,7 +772,7 @@
         const soundcloudPlayer = document.getElementById('soundcloudPlayer');
 
         let musicPlaying = false;
-        let step = 0; // 0: welcome, 1: letter, 2: wishes, 3: gift-image
+        let step = 0; // 0: welcome, 1: letter, 2: wishes
 
         // SoundCloud Widget API
         let widget;
@@ -990,22 +916,13 @@
             }, 1500);
         });
 
-        // Step 3: Click continue button -> Show gift image
+        // Confetti effect when clicking continue button (link)
         continueBtn.addEventListener('click', (e) => {
-            if (step !== 2) return;
-            step = 3;
-
             // Create sparkles
             createSparkles(e.clientX, e.clientY);
 
             // Create confetti
             createConfetti();
-
-            // Hide wishes and show gift image
-            setTimeout(() => {
-                wishes.classList.add('hide');
-                giftImageScreen.classList.add('show');
-            }, 300);
         });
 
         // Reset animation
@@ -1018,7 +935,6 @@
             letterContainer.classList.remove('show', 'hide');
             envelope.classList.remove('opening');
             wishes.classList.remove('show', 'hide');
-            giftImageScreen.classList.remove('show');
             resetBtn.style.display = 'none';
             
             // Reset music
@@ -1057,6 +973,20 @@
 
         // Initialize
         createBackgroundParticles();
+
+        // Auto-play music when page loads
+        // Note: Some browsers block autoplay, so music might not start until user interacts with the page
+        setTimeout(() => {
+            soundcloudContainer.classList.add('show');
+            musicIndicator.classList.add('show');
+            musicIcon.textContent = '🔊';
+            musicText.textContent = 'Tắt';
+            musicPlaying = true;
+            
+            if (widget) {
+                widget.play();
+            }
+        }, 1000);
 
         // Add sparkle effect on hover over gift box
         giftBox.addEventListener('mouseenter', (e) => {
